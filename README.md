@@ -1,4 +1,4 @@
-# defoptcfg - the love child (or ugly chimera) of defopt and configargparser
+# defoptcfg - defopt with config files
 Extends [defopt](https://github.com/evanunderscore/defopt) to read defaults from a [yaml](https://pyyaml.org) file.
 
 running `test.py`:
