@@ -113,6 +113,9 @@ def _create_parser(funcs, *args, **kwargs):
     short = kwargs.pop('short', None)
     strict_kwonly = kwargs.pop('strict_kwonly', True)
     show_types = kwargs.pop('show_types', False)
+    ignore_required = kwargs.pop('ignore_required', False)
+    config_argname = kwargs.pop('config_argname', 'cfg')
+
     if kwargs:
         raise TypeError(
             'unexpected keyword argument: {}'.format(list(kwargs)[0]))
@@ -174,7 +177,12 @@ def _public_signature(func):
                         if not param.name.startswith('_')))
 
 
-def _populate_parser(func, parser, parsers, short, strict_kwonly):
+def _populate_parser(func, parser, parsers, short, strict_kwonly,
+                     ignore_required, config_argname):
+    _add_argument(parser, config_argname, [],
+                  help='config file for setting defaults',
+                  default=SUPPRESS)
+    parser._required_args = []  # this will hold a list of all required args
     sig = _public_signature(func)
     doc = _parse_function_docstring(func)
     hints = _get_type_hints(func)
@@ -206,6 +214,13 @@ def _populate_parser(func, parser, parsers, short, strict_kwonly):
         default = param.default if hasdefault else SUPPRESS
         required = not hasdefault and param.kind != param.VAR_POSITIONAL
         positional = name in positionals
+        if ignore_required and required:
+            required = False  # will not add as required arg to parser
+            _arg_is_required = True  # but we want to keep track internally of the required args
+            default = '==IGNORE-REQUIRED=='
+        else:
+            _arg_is_required = False
+
         if type_.type == bool and not positional and not type_.container:
             # Special case: just add parameterless --name and --no-name flags.
             if default == SUPPRESS:
@@ -231,9 +246,16 @@ def _populate_parser(func, parser, parsers, short, strict_kwonly):
                 # This is purely to override the displayed default of None.
                 # Ideally we wouldn't want to show a default at all.
                 kwargs['default'] = []
+            if ignore_required and default=='==IGNORE-REQUIRED==':
+                kwargs['nargs'] = '?'
+                kwargs['default'] = None
+
         else:
-            kwargs['required'] = required
-            kwargs['default'] = default
+            if ignore_required and default=='==IGNORE-REQUIRED==':
+                kwargs['default'] = None
+            else:
+                kwargs['required'] = required
+                kwargs['default'] = default
         if type_.container:
             assert type_.container == list
             kwargs['nargs'] = '*'
@@ -268,6 +290,8 @@ def _populate_parser(func, parser, parsers, short, strict_kwonly):
         else:
             kwargs['type'] = _get_parser(type_.type, parsers)
         _add_argument(parser, name, short, **kwargs)
+        if _arg_is_required:
+            parser._required_args.append(name)
 
 
 def _add_argument(parser, name, short, _positional=False, **kwargs):
