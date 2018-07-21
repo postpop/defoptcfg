@@ -1,5 +1,5 @@
 """Love child of defopt and configargparse."""
-import defopt
+import defopt_base
 import sys
 import logging
 from typing import Callable, Iterable, Union, Dict, MutableMapping
@@ -20,15 +20,12 @@ def run(func: Callable,
     Returns:
         return value of func
 
-    TODO:
-        test with more complex args
-
     """
     if isinstance(func, list):
         logging.warning(" Does not support lists of funcs - currently only works with single function calls.")
 
     # create parser that will run even when required args are missing from command line
-    parser = defopt._create_parser(func, ignore_required=True, config_argname=config_argname)
+    parser = defopt_base._create_parser(func, ignore_required=True, config_argname=config_argname)
     logging.debug(f" Processing command line args.")
     args = parser.parse_args(sys.argv[1:])
     logging.debug(f"   found required args {parser._required_args}.")
@@ -81,7 +78,7 @@ def run(func: Callable,
 
     logging.debug(f" Calling {func} with args namespace")
     logging.debug(f"   {args}.")
-    defopt._call_function(parser, args._func, args)
+    defopt_base._call_function(parser, args._func, args)
 
 
 def read_config_files(config_files: Iterable[str] = [],
