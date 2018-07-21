@@ -44,17 +44,6 @@ Salut Ringo!
 python test.py Hello --cfg config.yml -n John
 Salut John!
 ```
-
-Generally, the order of precedence for arguments is
-- command line > config file >  function defaults.
-
-
-Default config files can be provided via
-```python
-defoptcfg.run(main, default_config_files=['a.yml', `b.yml])
-```
-Precedence is according to order in list of files. The config file provided via the command line overrides the default config files.
-
 ## Installation
 1. clone: `git clone https://github.com/postpop/defoptcfg`
 2. enter cloned directory: `cd defoptcfg`
@@ -100,7 +89,7 @@ resulting in a much shorter command line:
 python train_network.py --cfg config.yml --run-name test_more_filters --filters 64
 ```
 
-# String interpolation in config files
+## String interpolation in config files
 In addition, string interpolation facilitates the structuring of config files:
 ```yaml
 $root$: /Volumes/share
@@ -109,6 +98,13 @@ base_output_path: $root$/networks/results
 ```
 Keys surrounded by `$...$` (e.g. `$root$`) are treated as variables and their occurrences in any of the values will be
 replaced by that key's value. In the above example, `$root$` in `$root$/data/exp1/data_20151021_1629` will be replaced by `/Volumes/share` to become `/Volumes/share/data/exp1/data_20151021_1629`.
+
+## Default config files
+Default config files can be provided via
+```python
+defoptcfg.run(main, default_config_files=['a.yml', 'b.yml'])
+```
+Precedence is according to order in list of files. Values in `a.yml` are overridden by those in `b.yml`, which in turn are overridden by those in the config file provided via the command line.
 
 ## Future plans
 - Needs much more testing. Does probably not work with defopt's advanced fatures (entrypoints, custom parsers etc)
