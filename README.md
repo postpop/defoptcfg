@@ -55,6 +55,10 @@ defoptcfg.run(main, default_config_files=['a.yml', `b.yml])
 ```
 Precedence is according to order in list of files. The config file provided via the command line overrides the default config files.
 
+## Installation
+1. clone: `git clone https://github.com/postpop/defoptcfg`
+2. enter cloned directory: `cd defoptcfg`
+3. install: `pip install .`
 
 ## More complex use case
 Say you have written a function in `train_network.py` that runs a complex machine learning task and has many, many parameters for flexibility:
