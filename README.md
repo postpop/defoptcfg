@@ -93,7 +93,7 @@ python train_network.py --cfg config.yml --run-name test_more_filters --filters 
 ```
 
 # String interpolation in config files
-Very rudimentary interpolation allows reuse and better structuring of config files:
+String interpolation allows reuse and better structuring of config files:
 ```yaml
 $root_path$: /Volumes/share
 data_path: $root_path$/data/exp1/data_20151021_1629
