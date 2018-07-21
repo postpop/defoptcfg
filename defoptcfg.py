@@ -2,7 +2,7 @@
 import defopt
 import sys
 import logging
-from typing import Callable, Iterable, Union, Dict
+from typing import Callable, Iterable, Union, Dict, MutableMapping
 
 
 def run(func: Callable,
@@ -33,7 +33,7 @@ def run(func: Callable,
     args = parser.parse_args(sys.argv[1:])
     logging.debug(f"   found required args {parser._required_args}.")
 
-    # parse and merge all supplied config files into a single dict
+    # parse and merge all supplied config files into a single dct
     config_files = default_config_files
     if hasattr(args, config_argname):
         config_files = [*default_config_files, getattr(args, config_argname)]
@@ -84,7 +84,8 @@ def run(func: Callable,
     defopt._call_function(parser, args._func, args)
 
 
-def read_config_files(config_files: Iterable[str] = []) -> Dict:
+def read_config_files(config_files: Iterable[str] = [],
+                      interpolate: bool = True) -> Dict:
     """Parse and merge config files."""
     if config_files:
         try:
@@ -100,9 +101,28 @@ def read_config_files(config_files: Iterable[str] = []) -> Dict:
                 this_config = yaml.load(stream)
             except yaml.YAMLError as exc:
                 logging.error(exc)
+        if interpolate:
+            logging.debug(f"   interpolating.")
+            this_config = interpolate_dict(this_config)
         logging.debug(f"     found the following args:")
         logging.debug(f"     {this_config}")
         config = {**config, **this_config}
     logging.debug(f"   merges resulted in new config:")
     logging.debug(f"   {config}")
     return config
+
+
+def interpolate_dict(dct: MutableMapping[str, str]) -> MutableMapping[str, str]:
+    """Interpolate strings in dict values."""
+    # TODO maybe allow any key to be a var...
+    # id all "variables"
+    dct_vars = {key: val for key, val in dct.items() if key.startswith('$') and key.endswith('$')}
+
+    # now replace occurences of those all values
+    for _ in range(len(dct_vars)+1):
+        for key, val in dct.items():
+            for var_key, var_val in dct_vars.items():
+                if var_key in val:
+                    newval = val.replace(var_key, var_val)
+                    dct[key] = newval
+    return dct

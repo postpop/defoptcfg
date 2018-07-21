@@ -92,9 +92,19 @@ resulting in something like this:
 python train_network.py --cfg config.yml --run-name test_more_filters --filters 64
 ```
 
+# String interpolation in config files
+Very rudimentary interpolation allows reuse and better structuring of config files:
+```yaml
+$root_path$: /Volumes/share
+data_path: $root_path$/data/exp1/data_20151021_1629
+base_output_path: $root_path$/networks/results
+```
+Keys surrounded by `$...$` are treated as variables and their occurrences in any of the values will be
+replaced by that key's value. In the above example, `$root_path$/data/exp1/data_20151021_1629` will become `/Volumes/share/data/exp1/data_20151021_1629`.
+
 ## Future plans
 - Needs much more testing. Does probably not work with defopt's advanced fatures (entrypoints, custom parsers etc)
-- Support string interpolation (via jinja2?):  [here](http://dontfragment.com/using-python-yaml-and-jinja2-to-generate-config-files/), [here](https://stackoverflow.com/questions/42083616/yaml-and-jinja2-reader),
+- Better support for string interpolation (via jinja2?):  [here](http://dontfragment.com/using-python-yaml-and-jinja2-to-generate-config-files/), [here](https://stackoverflow.com/questions/42083616/yaml-and-jinja2-reader),
 
 [1]: https://github.com/evanunderscore/defopt
 [2]: https://pyyaml.org
