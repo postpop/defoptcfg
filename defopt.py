@@ -141,6 +141,9 @@ def _create_parser(funcs, *args, **kwargs):
                 help=_parse_function_docstring(func).first_line)
             _populate_parser(func, subparser, parsers, short, strict_kwonly)
             subparser.set_defaults(_func=func)
+    _add_argument(parser, config_argname, [],
+                  help='config file for setting defaults',
+                  default=SUPPRESS)
     return parser
 
 
@@ -178,11 +181,7 @@ def _public_signature(func):
                         if not param.name.startswith('_')))
 
 
-def _populate_parser(func, parser, parsers, short, strict_kwonly,
-                     ignore_required, config_argname):
-    _add_argument(parser, config_argname, [],
-                  help='config file for setting defaults',
-                  default=SUPPRESS)
+def _populate_parser(func, parser, parsers, short, strict_kwonly, ignore_required):
     parser._required_args = []  # this will hold a list of all required args
     parser._arg_info = dict()
     sig = _public_signature(func)
