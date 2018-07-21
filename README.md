@@ -30,7 +30,7 @@ optional arguments:
                         (default: Paul)
   --cfg CFG             config file for setting defaults
 ```
-Configuration can also be provided via yaml files. Arguments from config files override function defaults and are overridden by command line arguments.
+Configuration can also be provided via yaml files. Arguments from config files override function defaults and are overridden by command line arguments. Keys in the config file must match the full argument name:
 ```yaml
 greeting: Salut
 name: Ringo
@@ -45,11 +45,15 @@ python test.py Hello --cfg config.yml -n John
 Salut John!
 ```
 
-Generally, the order of precedence for arguments is:
-- command line arguments > config file >  function defaults
-- if (multiple) default config files are provided then
-    - later files in default list override earlier ones and
-    - the config file provided via command line arguments overrides the default config files.
+Generally, the order of precedence for arguments is
+- command line > config file >  function defaults.
+
+
+Default config files can be provided via
+```python
+defoptcfg.run(main, default_config_files=['a.yml', `b.yml])
+```
+Precedence is according to order in list of files. The config file provided via the command line overrides the default config files.
 
 
 ## More complex use case
@@ -100,7 +104,7 @@ data_path: $root$/data/exp1/data_20151021_1629
 base_output_path: $root$/networks/results
 ```
 Keys surrounded by `$...$` (e.g. `$root$`) are treated as variables and their occurrences in any of the values will be
-replaced by that key's value. In the above example, `$root$` in `$root$/data/exp1/data_20151021_1629` will be replace by `/Volumes/share` to become `/Volumes/share/data/exp1/data_20151021_1629`.
+replaced by that key's value. In the above example, `$root$` in `$root$/data/exp1/data_20151021_1629` will be replaced by `/Volumes/share` to become `/Volumes/share/data/exp1/data_20151021_1629`.
 
 ## Future plans
 - Needs much more testing. Does probably not work with defopt's advanced fatures (entrypoints, custom parsers etc)
