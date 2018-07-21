@@ -183,6 +183,7 @@ def _populate_parser(func, parser, parsers, short, strict_kwonly,
                   help='config file for setting defaults',
                   default=SUPPRESS)
     parser._required_args = []  # this will hold a list of all required args
+    parser._arg_info = dict()
     sig = _public_signature(func)
     doc = _parse_function_docstring(func)
     hints = _get_type_hints(func)
@@ -216,8 +217,8 @@ def _populate_parser(func, parser, parsers, short, strict_kwonly,
         positional = name in positionals
         if ignore_required and required:
             required = False  # will not add as required arg to parser
+            parser._required_args.append(name)
             _arg_is_required = True  # but we want to keep track internally of the required args
-            default = '==IGNORE-REQUIRED=='
         else:
             _arg_is_required = False
 
@@ -246,12 +247,12 @@ def _populate_parser(func, parser, parsers, short, strict_kwonly,
                 # This is purely to override the displayed default of None.
                 # Ideally we wouldn't want to show a default at all.
                 kwargs['default'] = []
-            if ignore_required and default=='==IGNORE-REQUIRED==':
+            if ignore_required and _arg_is_required:
                 kwargs['nargs'] = '?'
                 kwargs['default'] = None
 
         else:
-            if ignore_required and default=='==IGNORE-REQUIRED==':
+            if ignore_required and _arg_is_required:
                 kwargs['default'] = None
             else:
                 kwargs['required'] = required
@@ -290,8 +291,7 @@ def _populate_parser(func, parser, parsers, short, strict_kwonly,
         else:
             kwargs['type'] = _get_parser(type_.type, parsers)
         _add_argument(parser, name, short, **kwargs)
-        if _arg_is_required:
-            parser._required_args.append(name)
+        parser._arg_info[name] = kwargs
 
 
 def _add_argument(parser, name, short, _positional=False, **kwargs):
