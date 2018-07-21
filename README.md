@@ -5,23 +5,32 @@ running `test.py`:
 ```python
 import defoptcfg
 def main(greeting: str, *, name: str = 'Paul'):
+    """Greet someone.
+
+    Args:
+        greeting: How do you want to greet someone?
+        name: Who do you want to greet?
+    """
     print(f"{greeting} {name}!")
 defoptcfg.run(main)
 ```
 
-[defopt](https://github.com/evanunderscore/defopt) will generate a command line interface from the function signature. Type information must be provided by annotating the function definition or in the doc string (see the defopt [docs](http://defopt.readthedocs.io/en/latest/) for details):
+[defopt](https://github.com/evanunderscore/defopt) will generate a command line interface from the function signature. Type information must be provided by annotating the function definition or in the doc string (see defopt's [docs](http://defopt.readthedocs.io/en/latest/) for details):
 ```shell
 python test.py -h
-usage: test.py [-h] [--cfg CFG] [-n NAME] [greeting]
+usage: test.py [-h] [-n NAME] [--cfg CFG] [greeting]
+
+Greet someone.
 
 positional arguments:
-  greeting
+  greeting              How do you want to greet someone?
 
 optional arguments:
   -h, --help            show this help message and exit
+  -n NAME, --name NAME  Who do you want to greet?
+                        (default: Paul)
   --cfg CFG             config file for setting defaults
-  -n NAME, --name NAME
- ```
+```
 Configuration can be provided via yaml files. These override function defaults and are overridden by command line arguments.
 ```yaml
 greeting: Salut
@@ -45,4 +54,4 @@ Generally, the order of precedence for arguments is:
 
 ## Future plans
 - Needs much more testing. Does probably not work with defopt's advanced fatures (entrypoints, custom parsers etc)
-- support interpolation (via jinja2?):  [here](http://dontfragment.com/using-python-yaml-and-jinja2-to-generate-config-files/), [here](https://stackoverflow.com/questions/42083616/yaml-and-jinja2-reader),
+- Support string interpolation (via jinja2?):  [here](http://dontfragment.com/using-python-yaml-and-jinja2-to-generate-config-files/), [here](https://stackoverflow.com/questions/42083616/yaml-and-jinja2-reader),
