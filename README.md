@@ -1,7 +1,6 @@
 # defoptcfg - defopt with config files
 Extends [defopt](https://github.com/evanunderscore/defopt) to read defaults from a [yaml](https://pyyaml.org) file.
 
-running `test.py`:
 ```python
 import defoptcfg
 def main(greeting: str, *, name: str = 'Paul'):
@@ -14,7 +13,6 @@ def main(greeting: str, *, name: str = 'Paul'):
     print(f"{greeting} {name}!")
 defoptcfg.run(main)
 ```
-
 [defopt](https://github.com/evanunderscore/defopt) will generate a command line interface from the function signature. Type information must be provided by annotating the function definition or in the doc string (see defopt's [docs](http://defopt.readthedocs.io/en/latest/) for details):
 ```shell
 python test.py -h
