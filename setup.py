@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name='defoptcfg',
     version='0.1',
-    py_modules=['defoptcfg'],
+    py_modules=['defoptcfg', 'defopt_base'],
     # test_suite='test_defopt',
     install_requires=[
         'docutils',
