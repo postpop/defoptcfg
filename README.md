@@ -79,7 +79,7 @@ Thanks to [defopt](1), you automagically have a command line interface (provided
 ```shell
 python train_network.py /Volumes/share/data/exp1/data_20151021 --base-output-path /Volumes/share/networks/results --run-name test_more_filters --data-name fly-courtship --filters 64 --epochs 20 --batch_size 1
 ```
-This is obviously long. defoptcfg allows you to provide arguments via a config file `config.yml`:
+This is long. defoptcfg allows you to provide arguments via a config file `config.yml`:
 ```yaml
 data_path: /Volumes/share/data/exp1/data_20151021_1629
 base_output_path: /Volumes/share/networks/results
