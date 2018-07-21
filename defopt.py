@@ -129,7 +129,8 @@ def _create_parser(funcs, *args, **kwargs):
         formatter_class = _Formatter
     parser = ArgumentParser(formatter_class=formatter_class)
     if callable(funcs):
-        _populate_parser(funcs, parser, parsers, short, strict_kwonly)
+        _populate_parser(funcs, parser, parsers, short, strict_kwonly,
+                         ignore_required, config_argname)
         parser.set_defaults(_func=funcs)
     else:
         subparsers = parser.add_subparsers()
