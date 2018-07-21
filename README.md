@@ -75,7 +75,7 @@ def train_network(data_path: str, *,
 if __name__ == '__main__':
     defoptcfg.run(train_network)
 ```
-Thanks to [defopt](1), you automagically have a command line interface (provided you have properly [type annotated][5] or [docstring][6]'ed it, defopt's [docs][4] have all the details) ) and can call the function like so:
+Thanks to [defopt](1), you automagically have a command line interface (provided you have properly [type annotated][5] or [docstring][6]'ed it, defopt's [docs][4] have all the details on how to do that) and can call the function like so:
 ```shell
 python train_network.py /Volumes/share/data/exp1/data_20151021 --base-output-path /Volumes/share/networks/results --run-name test_more_filters --data-name fly-courtship --filters 64 --epochs 20 --batch_size 1
 ```
@@ -96,7 +96,6 @@ python train_network.py --cfg config.yml --run-name test_more_filters --filters 
 - Needs much more testing. Does probably not work with defopt's advanced fatures (entrypoints, custom parsers etc)
 - Support string interpolation (via jinja2?):  [here](http://dontfragment.com/using-python-yaml-and-jinja2-to-generate-config-files/), [here](https://stackoverflow.com/questions/42083616/yaml-and-jinja2-reader),
 
-## References
 [1]: https://github.com/evanunderscore/defopt
 [2]: https://pyyaml.org
 [3]: https://github.com/bw2/ConfigArgParse
