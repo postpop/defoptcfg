@@ -92,12 +92,14 @@ python train_network.py --cfg config.yml --run-name test_more_filters --filters 
 ## String interpolation in config files
 In addition, string interpolation facilitates the structuring of config files:
 ```yaml
-$root$: /Volumes/share
+root: /Volumes/share
 data_path: $root$/data/exp1/data_20151021_1629
 base_output_path: $root$/networks/results
 ```
-Keys surrounded by `$...$` (e.g. `$root$`) are treated as variables and their occurrences in any of the values will be
+Values of any key in the config file can be turned into variables by surrounding with `$...$` (e.g. `$root$`). Their occurrences in any of the values will be
 replaced by that key's value. In the above example, `$root$` in `$root$/data/exp1/data_20151021_1629` will be replaced by `/Volumes/share` to become `/Volumes/share/data/exp1/data_20151021_1629`.
+
+__Warning__: Take care when using this feature since the current implementation does only incompletely guard against recursion catastrophes. E.g. `root1: $root2$, root2: $root1$` will result in an endless cycle of interpolations. Current safeguard is to limit the number of cycles to 20 with the `n_iter` parameter.
 
 ## Default config files
 Default config files can be provided via
@@ -108,7 +110,7 @@ Precedence is according to order in list of files. Values in `a.yml` are overrid
 
 ## Future plans
 - Needs much more testing. Does probably not work with defopt's advanced fatures (entrypoints, custom parsers etc)
-- Better support for string interpolation (via jinja2?):  [here](http://dontfragment.com/using-python-yaml-and-jinja2-to-generate-config-files/), [here](https://stackoverflow.com/questions/42083616/yaml-and-jinja2-reader),
+- Better support and more robust support for string interpolation (via jinja2?):  [here](http://dontfragment.com/using-python-yaml-and-jinja2-to-generate-config-files/), [here](https://stackoverflow.com/questions/42083616/yaml-and-jinja2-reader),
 
 [1]: https://github.com/evanunderscore/defopt
 [2]: https://pyyaml.org

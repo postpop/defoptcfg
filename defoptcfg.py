@@ -109,17 +109,31 @@ def read_config_files(config_files: Iterable[str] = [],
     return config
 
 
-def interpolate_dict(dct: MutableMapping[str, str]) -> MutableMapping[str, str]:
+def interpolate_dict(dct: MutableMapping[str, str], n_iter: int = 10) -> MutableMapping[str, str]:
     """Interpolate strings in dict values."""
     # TODO maybe allow any key to be a var...
     # id all "variables"
-    dct_vars = {key: val for key, val in dct.items() if key.startswith('$') and key.endswith('$')}
+    dct_vars = dct#{key: val for key, val in dct.items() if key.startswith('$') and key.endswith('$')}
 
     # now replace occurences of those all values
-    for _ in range(len(dct_vars)+1):
+    incomplete = len(dct_vars)>0
+    iters = 0
+    logging.debug(f"  {dct}")
+    while incomplete and iters < n_iter:
+        incomplete = False
         for key, val in dct.items():
             for var_key, var_val in dct_vars.items():
-                if var_key in val:
-                    newval = val.replace(var_key, var_val)
+                if f"${var_key}$" in val:
+                    newval = val.replace(f"${var_key}$", var_val)
                     dct[key] = newval
+            # check if there are still
+            for var_key in dct_vars.keys():
+                incomplete = incomplete or (f"${var_key}$" in dct[key])
+        iters += 1
+        logging.debug(f"  interpolation iteration {iters} - complete? {not incomplete}")
+        logging.debug(f"  {dct}")
+    if iters == n_iter:
+        logging.warning(f"Maximum number of iterations ({n_iter}) reached. "
+                         "Interpolation is likely incomplete. "
+                         "Increase n_iter. This may be a bug. ")
     return dct
