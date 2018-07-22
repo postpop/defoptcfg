@@ -93,13 +93,12 @@ python train_network.py --cfg config.yml --run-name test_more_filters --filters 
 In addition, string interpolation facilitates the structuring of config files:
 ```yaml
 root: /Volumes/share
-data_path: $root$/data/exp1/data_20151021_1629
-base_output_path: $root$/networks/results
+data_path: $root$/data
 ```
 Values of any key in the config file can be turned into variables by surrounding with `$...$` (e.g. `$root$`). Their occurrences in any of the values will be
-replaced by that key's value. In the above example, `$root$` in `$root$/data/exp1/data_20151021_1629` will be replaced by `/Volumes/share` to become `/Volumes/share/data/exp1/data_20151021_1629`.
+replaced by that key's value. In the above example, `$root$` in `$root$/data` will be replaced by `/Volumes/share` to become `/Volumes/share/data`.
 
-__Warning__: Take care when using this feature since the current implementation does only incompletely guard against recursion catastrophes. E.g. `root1: $root2$, root2: $root1$` will result in an endless cycle of interpolations. Current safeguard is to limit the number of cycles to 20 with the `n_iter` parameter.
+__Warning__: Take care when using this feature since the current implementation does only incompletely guard against recursion catastrophes. For instance, a config file with `root1: $root2$; root2: $root1$` will result in an endless cycle of interpolations. Current safeguard is to limit the number of cycles to 20 with the `n_iter` parameter.
 
 ## Default config files
 Default config files can be provided via
