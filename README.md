@@ -108,7 +108,7 @@ defoptcfg.run(main, default_config_files=['a.yml', 'b.yml'])
 Precedence is according to order in list of files. Values in `a.yml` are overridden by those in `b.yml`, which in turn are overridden by those in the config file provided via the command line.
 
 ## Future plans
-- Needs much more testing. Does probably not work with defopt's advanced fatures (entrypoints, custom parsers etc)
+- Needs much more testing. Does probably not work with defopt's advanced features (entry points, custom parsers etc)
 - Better support and more robust support for string interpolation (via jinja2?):  [here](http://dontfragment.com/using-python-yaml-and-jinja2-to-generate-config-files/), [here](https://stackoverflow.com/questions/42083616/yaml-and-jinja2-reader),
 
 [1]: https://github.com/evanunderscore/defopt
