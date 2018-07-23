@@ -133,7 +133,7 @@ def interpolate_dict(dct: MutableMapping[str, str], n_iter: int = 10) -> Mutable
         logging.debug(f"  interpolation iteration {iters} - complete? {not incomplete}")
         logging.debug(f"  {dct}")
     if iters == n_iter:
-        logging.warning(f"Maximum number of iterations ({n_iter}) reached. "
-                         "Interpolation is likely incomplete. "
-                         "Increase n_iter. This may be a bug. ")
+        msg = f"Maximum number of iterations n_iter={n_iter} reached. Interpolation is likely incomplete. Increase n_iter. May be caused by a circular reference."
+        logging.error(msg)
+        raise RuntimeError(msg)
     return dct
