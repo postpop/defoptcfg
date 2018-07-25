@@ -45,10 +45,10 @@ python test.py Hello --cfg config.yml -n John
 Salut John!
 ```
 ## Installation
-1. clone: `git clone https://github.com/postpop/defoptcfg`
-2. enter cloned directory: `cd defoptcfg`
-3. install: `pip install .`
-
+In a terminal window run
+```shell
+pip install git+http://github.com/postpop/defoptcfg.git
+```
 ## More complex use case
 Say you have written a function in `train_network.py` that runs a complex machine learning task and has many, many parameters for flexibility:
 ```python
